@@ -1,0 +1,71 @@
+pkg_info {
+  arch: "v1model"
+}
+tables {
+  preamble {
+    id: 33597484
+    name: "ingress.transport_tbl"
+    alias: "transport_tbl"
+  }
+  match_fields {
+    id: 1
+    name: "meta.paxos_metadata.set_drop"
+    bitwidth: 1
+    match_type: EXACT
+  }
+  action_refs {
+    id: 16788328
+  }
+  action_refs {
+    id: 16812834
+  }
+  size: 2
+}
+actions {
+  preamble {
+    id: 16788328
+    name: "ingress._drop"
+    alias: "_drop"
+  }
+}
+actions {
+  preamble {
+    id: 16789295
+    name: "ingress.increase_instance"
+    alias: "increase_instance"
+  }
+}
+actions {
+  preamble {
+    id: 16812834
+    name: "ingress.forward"
+    alias: "forward"
+  }
+  params {
+    id: 1
+    name: "port"
+    bitwidth: 9
+  }
+  params {
+    id: 2
+    name: "acceptorPort"
+    bitwidth: 16
+  }
+}
+registers {
+  preamble {
+    id: 369118532
+    name: "ingress.registerInstance"
+    alias: "registerInstance"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 32
+      }
+    }
+  }
+  size: 1
+}
+type_info {
+}

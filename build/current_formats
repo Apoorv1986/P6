@@ -1,0 +1,26 @@
+Ether, ethernet
+IP,ipv4
+
+error types:
+	ttl
+        ttl_1
+	chksum
+	version
+	ihl
+	passed
+        chksum_e
+	len  (TODO)
+	mac_swap (TODO)
+	port (TODO)
+	dst_mac (TODO)
+
+call for tarantula:
+def tarantula():
+  os.system("%s %s %s %.5f" %(location_of_the_file, location_of_the_results, current_time)) //the last one is okay in time.time()
+
+
+
+    str_packet = pkt.show(dump = True)
+    str_packet = str_packet.replace('\n',' ')
+    print str_packet
+

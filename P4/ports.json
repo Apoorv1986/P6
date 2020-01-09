@@ -1,0 +1,7 @@
+{
+    "PortToIf" : [
+        { "device_port" :  0, "if" : "enp0s9"  },
+        { "device_port" :  1, "if" : "enp0s10"  },
+        { "device_port" :  2, "if" : "enp0s16"  }
+    ]
+}

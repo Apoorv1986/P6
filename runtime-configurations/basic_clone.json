@@ -1,0 +1,58 @@
+{
+  "target": "bmv2",
+  "p4info": "/vagrant/run_files/actual.p4info",
+  "bmv2_json": "/vagrant/run_files/actual.json",
+  "clone_session_entries": [
+    {"session_id": 2,
+     "replicas": {
+       "egress_port": 2,
+       "instance": 1
+     },
+     "class_of_service": 2,
+     "packet_length_bytes": 64
+    }
+],
+  "table_entries": [
+    {
+      "table": "MyIngress.ipv4_lpm",
+      "match": {
+        "hdr.ipv4.dstAddr": ["172.16.20.100", 32]
+      },
+      "action_name": "MyIngress.ipv4_forward",
+      "action_params": {
+        "dstAddr": "00:00:00:00:01:01",
+        "port": 1
+      }
+    },
+    {
+      "table": "MyIngress.ipv4_lpm",
+      "match": {
+        "hdr.ipv4.dstAddr": ["172.16.30.100", 32]
+      },
+      "action_name": "MyIngress.ipv4_clone",
+      "action_params": {
+        "dstAddr": "00:00:00:00:01:02",
+        "port": 2
+      }
+    },
+    {
+      "table": "MyIngress.ipv4_acl",
+      "match": {
+        "hdr.ipv4.dstAddr": ["172.16.30.100", 32]
+      },
+      "action_name": "MyIngress.drop",
+      "action_params": { }
+    },
+    {
+      "table": "MyIngress.ipv4_acl",
+      "match": {
+        "hdr.ipv4.dstAddr": ["172.16.20.100", 32]
+      },
+      "action_name": "MyIngress.permit",
+      "action_params": { }
+    }
+
+
+    
+  ]
+}

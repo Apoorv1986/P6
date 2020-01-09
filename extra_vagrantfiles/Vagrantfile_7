@@ -1,0 +1,88 @@
+Vagrant.configure("2") do |config|
+        config.vm.define "s7" do |s7|
+                s7.vm.box = "p4-onos"
+		s7.vm.network "private_network",ip: "10.10.1.100", netmask: "255.255.255.0",virtualbox__intnet: "controller7"
+                s7.vm.network "private_network",ip: "172.16.10.10", netmask: "255.255.255.0", mac: "000000000101", virtualbox__intnet: "source7-s7"
+                s7.vm.network "private_network",ip: "172.16.20.10", netmask: "255.255.255.0", mac: "000000000102", virtualbox__intnet: "s7-sink71"
+                s7.vm.network "private_network",ip: "172.16.30.10", netmask: "255.255.255.0", mac: "000000000103", virtualbox__intnet: "s7-sink72"
+                s7.vm.provider "virtualbox" do |virtualbox|
+                        virtualbox.memory = "4096"
+                        virtualbox.cpus = "1"
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc2", "allow-all"]
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc3", "allow-all"]
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc4", "allow-all"]
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc5", "allow-all"]
+                        #virtualbox.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+                        virtualbox.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
+                end
+
+        end
+        config.vm.define "sink71" do |sink71|
+                sink71.vm.box = "loadgen"
+                sink71.vm.network "private_network",ip: "172.16.20.100", netmask: "255.255.255.0", mac: "000000000410", virtualbox__intnet: "s7-sink71"
+                sink71.vm.network "private_network",ip: "192.168.0.6", netmask: "255.255.255.252", mac: "000000000411", virtualbox__intnet: "sink71-agent7"
+                sink71.vm.provider "virtualbox" do |virtualbox|
+                        virtualbox.memory = "1024"
+                        virtualbox.cpus = "1"
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc2", "allow-all"]
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc3", "allow-all"]
+                        virtualbox.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+                        virtualbox.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
+                end
+        end
+        config.vm.define "sink72" do |sink72|
+                sink72.vm.box = "loadgen"
+                sink72.vm.network "private_network",ip: "172.16.30.100", netmask: "255.255.255.0", mac: "000000000412", virtualbox__intnet: "s7-sink72"
+                sink72.vm.network "private_network",ip: "192.168.0.10", netmask: "255.255.255.252", mac: "000000000413", virtualbox__intnet: "sink72-agent7"
+                sink72.vm.provider "virtualbox" do |virtualbox|
+                        virtualbox.memory = "1024"
+                        virtualbox.cpus = "1"
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc2", "allow-all"]
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc3", "allow-all"]
+                        virtualbox.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+                        virtualbox.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
+                end
+        end
+        config.vm.define "source7" do |source7|
+                source7.vm.box = "loadgen"
+                source7.vm.network "private_network",ip: "172.16.10.100", netmask: "255.255.255.0", mac: "000000000110", virtualbox__intnet: "source7-s7"
+                source7.vm.network "private_network",ip: "192.168.0.1", netmask: "255.255.255.252", mac: "000000000111", virtualbox__intnet: "source7-agent7"
+                source7.vm.provider "virtualbox" do |virtualbox|
+                        virtualbox.memory = "512"
+                        virtualbox.cpus = "1"
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc2", "allow-all"]
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc3", "allow-all"]
+                        virtualbox.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+                        virtualbox.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
+                end
+
+        end
+        config.vm.define "controller7" do |controller7|
+                controller7.vm.box = "p4-onos"
+                controller7.vm.network "private_network",ip: "10.10.1.10", netmask: "255.255.255.0",virtualbox__intnet: "controller7"
+                controller7.vm.network "private_network",ip: "192.168.0.14", netmask: "255.255.255.252", virtualbox__intnet: "controller7-agent7"
+                controller7.vm.provider "virtualbox" do |virtualbox|
+                        virtualbox.memory = "2048"
+                        virtualbox.cpus = "2"
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc2", "allow-all"]
+                        virtualbox.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
+                end
+        end
+        config.vm.define "agent7" do |agent7|
+                agent7.vm.box = "ubuntu/bionic64"
+                agent7.vm.network "private_network",ip: "192.168.0.2", netmask: "255.255.255.252", mac: "000000000001", virtualbox__intnet: "source7-agent7"
+                agent7.vm.network "private_network",ip: "192.168.0.5", netmask: "255.255.255.252", mac: "000000000002", virtualbox__intnet: "sink71-agent7"
+                agent7.vm.network "private_network",ip: "192.168.0.9", netmask: "255.255.255.252", mac: "000000000002", virtualbox__intnet: "sink72-agent7"
+                agent7.vm.network "private_network",ip: "192.168.0.13", netmask: "255.255.255.252", mac: "000000000003", virtualbox__intnet: "controller7-agent7"
+                agent7.vm.provider "virtualbox" do |virtualbox|
+                        virtualbox.memory = "2048"
+                        virtualbox.cpus = "4"
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc2", "allow-all"]
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc3", "allow-all"]
+                        virtualbox.customize ["modifyvm", :id,"--nicpromisc4", "allow-all"]
+                        virtualbox.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+                        virtualbox.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
+                end
+		agent7.vm.provision "file", source: "~/.vagrant.d/boxes/loadgen/0/virtualbox/vagrant_private_key", destination: "vagrant_private_key"
+        end
+end

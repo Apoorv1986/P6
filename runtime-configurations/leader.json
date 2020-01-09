@@ -1,0 +1,25 @@
+{
+  "target": "bmv2",
+  "p4info": "/vagrant/run_files/actual.p4info",
+  "bmv2_json": "/vagrant/run_files/actual.json",
+  "table_entries": [
+    {
+      "table": "ingress.transport_tbl",
+      "default_action": true,
+      "action_name": "ingress._drop",
+      "action_params": { }
+    },
+    {
+      "table": "ingress.transport_tbl",
+      "match": {
+        "meta.paxos_metadata.set_drop": 0
+      },
+      "action_name": "ingress.forward",
+      "action_params": {
+        "port": 1,
+        "acceptorPort": 8765
+      }
+    }
+  ]
+}
+
